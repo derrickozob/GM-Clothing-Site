@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — G&M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand-mark"><img src="images/logo.png" alt="G&M logo" class="badge">G&amp;M</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="story.html">Our Story</a>
+    <a href="login.html">Log In</a>
+    <a href="cart.html" class="nav-cart">Cart <span id="cart-count" class="cart-count">0</span></a>
+  </div>
+</nav>
+
+<div class="confirm-wrap">
+  <div class="check-mark">✓</div>
+  <h1 class="section-title">Thank You for Your Order</h1>
+  <p id="confirm-detail" style="color:var(--ink-soft); margin-bottom:34px;"></p>
+  <a href="shop.html" class="btn btn-solid">Continue Shopping</a>
+</div>
+
+<footer class="footer">
+  G&amp;M — Gold &amp; Molly &nbsp;·&nbsp; Peace, God, and unity across cultures &nbsp;·&nbsp; Prototype build
+</footer>
+
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script>
+  const raw = localStorage.getItem("gm_last_order");
+  const order = raw ? JSON.parse(raw) : { orderNumber: "------", email: "your email", total: 0 };
+  document.getElementById("confirm-detail").textContent =
+    `Order #${order.orderNumber} — a confirmation email has been sent to ${order.email || "your inbox"}.`;
+</script>
+</body>
+</html>

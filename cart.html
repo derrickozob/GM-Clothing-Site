@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart — G&M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand-mark"><img src="images/logo.png" alt="G&M logo" class="badge">G&amp;M</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="story.html">Our Story</a>
+    <a href="login.html">Log In</a>
+    <a href="cart.html" class="nav-cart">Cart <span id="cart-count" class="cart-count">0</span></a>
+  </div>
+</nav>
+
+<section>
+  <div class="container">
+    <h2 class="section-title" style="text-align:left;">Your Cart</h2>
+    <div class="cart-layout">
+      <div id="cart-lines"></div>
+      <div class="summary-panel">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span class="amount" id="sum-subtotal">$0</span></div>
+        <div class="summary-row"><span>Shipping</span><span class="amount">Calculated at checkout</span></div>
+        <div class="summary-row total"><span>Total</span><span class="amount" id="sum-total">$0</span></div>
+        <a href="checkout.html" class="btn btn-solid btn-full" id="checkout-btn" style="margin-top:20px;">Checkout</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  G&amp;M — Gold &amp; Molly &nbsp;·&nbsp; Peace, God, and unity across cultures &nbsp;·&nbsp; Prototype build
+</footer>
+
+<script src="products.js"></script>
+<script src="garments.js"></script>
+<script src="cart.js"></script>
+<script>
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById("cart-lines");
+
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="empty-state">Your cart is empty. <a href="shop.html" style="text-decoration:underline;">Go shop.</a></div>`;
+      document.getElementById("checkout-btn").classList.add("btn-disabled-link");
+      document.getElementById("checkout-btn").style.pointerEvents = "none";
+      document.getElementById("checkout-btn").style.opacity = "0.4";
+    } else {
+      container.innerHTML = cart.map(line => {
+        const p = getProductById(line.id);
+        return `
+          <div class="cart-line">
+            <div class="cart-thumb">${garmentSVG(p.category, p.fill, p.ink, { fontSize: 9 })}</div>
+            <div>
+              <div class="cart-line-name">${p.name}</div>
+              <div class="cart-line-meta">Size: ${line.size} &middot; ${formatPrice(p.price)} each</div>
+              <div class="qty-control">
+                <button class="qty-btn" data-action="dec" data-id="${p.id}" data-size="${line.size}">−</button>
+                <span>${line.qty}</span>
+                <button class="qty-btn" data-action="inc" data-id="${p.id}" data-size="${line.size}">+</button>
+              </div>
+              <button class="qty-remove" data-action="remove" data-id="${p.id}" data-size="${line.size}">Remove</button>
+            </div>
+            <div class="cart-line-price">${formatPrice(p.price * line.qty)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    const subtotal = cartSubtotal();
+    document.getElementById("sum-subtotal").textContent = formatPrice(subtotal);
+    document.getElementById("sum-total").textContent = formatPrice(subtotal);
+
+    container.querySelectorAll("button[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const { action, id, size } = btn.dataset;
+        const line = getCart().find(l => l.id === id && l.size === size);
+        if (!line) return;
+        if (action === "inc") updateLineQty(id, size, line.qty + 1);
+        if (action === "dec") updateLineQty(id, size, line.qty - 1);
+        if (action === "remove") removeLine(id, size);
+        renderCart();
+      });
+    });
+  }
+
+  renderCart();
+</script>
+</body>
+</html>

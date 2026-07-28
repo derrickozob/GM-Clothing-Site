@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — G&M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand-mark"><img src="images/logo.png" alt="G&M logo" class="badge">G&amp;M</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="story.html">Our Story</a>
+    <a href="login.html">Log In</a>
+    <a href="cart.html" class="nav-cart">Cart <span id="cart-count" class="cart-count">0</span></a>
+  </div>
+</nav>
+
+<section>
+  <div class="container cart-layout">
+    <div>
+      <h2 class="section-title" style="text-align:left;">Checkout</h2>
+      <form id="checkout-form" class="form-grid">
+
+        <div class="form-section-title">Shipping Address</div>
+        <div class="field">
+          <label for="full-name">Full name</label>
+          <input id="full-name" type="text" required>
+        </div>
+        <div class="field">
+          <label for="address">Address</label>
+          <input id="address" type="text" required>
+        </div>
+        <div class="form-row-2">
+          <div class="field">
+            <label for="city">City</label>
+            <input id="city" type="text" required>
+          </div>
+          <div class="field">
+            <label for="postal">Postal code</label>
+            <input id="postal" type="text" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" required>
+        </div>
+
+        <div class="form-section-title">Billing Information</div>
+        <div class="field">
+          <label for="card-name">Name on card</label>
+          <input id="card-name" type="text" required>
+        </div>
+        <div class="field">
+          <label for="card-number">Card number</label>
+          <input id="card-number" type="text" inputmode="numeric" placeholder="•••• •••• •••• ••••" required>
+        </div>
+        <div class="form-row-2">
+          <div class="field">
+            <label for="expiry">Expiration date</label>
+            <input id="expiry" type="text" placeholder="MM/YY" required>
+          </div>
+          <div class="field">
+            <label for="cvc">CVC</label>
+            <input id="cvc" type="text" inputmode="numeric" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-solid btn-full" style="margin-top:12px;">Place Order</button>
+      </form>
+    </div>
+
+    <div class="summary-panel">
+      <h3>Order Summary</h3>
+      <div id="checkout-lines"></div>
+      <div class="summary-row"><span>Subtotal</span><span class="amount" id="co-subtotal">$0</span></div>
+      <div class="summary-row"><span>Shipping</span><span class="amount">Free</span></div>
+      <div class="summary-row total"><span>Total</span><span class="amount" id="co-total">$0</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  G&amp;M — Gold &amp; Molly &nbsp;·&nbsp; Peace, God, and unity across cultures &nbsp;·&nbsp; Prototype build
+</footer>
+
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script>
+  const cart = getCart();
+  if (cart.length === 0) {
+    window.location.href = "cart.html";
+  }
+
+  document.getElementById("checkout-lines").innerHTML = cart.map(line => {
+    const p = getProductById(line.id);
+    return `<div class="summary-row"><span>${p.name} (${line.size}) &times;${line.qty}</span><span class="amount">${formatPrice(p.price * line.qty)}</span></div>`;
+  }).join("");
+
+  const subtotal = cartSubtotal();
+  document.getElementById("co-subtotal").textContent = formatPrice(subtotal);
+  document.getElementById("co-total").textContent = formatPrice(subtotal);
+
+  document.getElementById("checkout-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const orderNumber = Math.floor(100000 + Math.random() * 900000);
+    const email = document.getElementById("email").value;
+    localStorage.setItem("gm_last_order", JSON.stringify({ orderNumber, email, total: subtotal }));
+    clearCart();
+    window.location.href = "confirmation.html";
+  });
+</script>
+</body>
+</html>

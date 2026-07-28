@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G&M — It's Amazing How We Keep Loving This Country</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand-mark"><img src="images/logo.png" alt="G&M logo" class="badge">G&amp;M</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="story.html">Our Story</a>
+    <a href="login.html">Log In</a>
+    <a href="cart.html" class="nav-cart">Cart <span id="cart-count" class="cart-count">0</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">A Message Stitched Into Every Thread</div>
+  <h1 class="hero-quote">"It's amazing how we keep loving this country, and this country does not love us back."</h1>
+  <div class="hero-actions">
+    <a href="shop.html" class="btn btn-solid">Shop Now</a>
+    <a href="story.html" class="btn btn-outline">Our Story</a>
+  </div>
+</header>
+
+<div class="torn-edge"></div>
+
+<section>
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="product-grid" id="featured-grid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  G&amp;M — Gold &amp; Molly &nbsp;·&nbsp; Peace, God, and unity across cultures &nbsp;·&nbsp; Prototype build
+</footer>
+
+<script src="products.js"></script>
+<script src="garments.js"></script>
+<script src="cart.js"></script>
+<script>
+  const featured = PRODUCTS.slice(0, 3);
+  const grid = document.getElementById("featured-grid");
+  grid.innerHTML = featured.map(p => `
+    <a class="product-card" href="product.html?id=${p.id}">
+      <div class="swatch">
+        <img src="images/logo.png" alt="G&amp;M logo" class="badge">
+        ${garmentSVG(p.category, p.fill, p.ink)}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${formatPrice(p.price)}</div>
+      </div>
+    </a>
+  `).join("");
+</script>
+</body>
+</html>
